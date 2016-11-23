@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
@@ -55,12 +54,11 @@ public class TFWC extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle(getString("name"));
-        Scene scene = new Scene(createUI());
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        createUI(primaryStage);
     }
 
-    private Parent createUI() {
+    private void createUI(Stage stage) {
+        final ScrollPane center = new ScrollPane();
         Text summary = new Text();
         Font currentFont = summary.getFont();
         summary.setFont(Font.font(currentFont.getFamily(), currentFont.getSize() * 1.5));
@@ -69,10 +67,25 @@ public class TFWC extends Application {
         comicStrip.setSmooth(true);
         comicStrip.setPreserveRatio(true);
         ComboBox<Comic> comicChooser = new ComboBox<>();
-        comicChooser.setVisible(false);
         comicChooser.valueProperty().addListener((ov, oldC, newC) -> {
             comicStrip.setImage(newC.image);
             summary.setText(newC.summary);
+            summary.setWrappingWidth(center.getWidth() - INSETS.getLeft() - INSETS.getRight());
+        });
+
+        FlowPane top = new FlowPane(comicChooser);
+        top.setPadding(INSETS);
+
+        VBox summaryParent = new VBox(summary);
+        summaryParent.setPadding(INSETS);
+        VBox centerContents = new VBox(comicStrip, summaryParent);
+        center.setContent(centerContents);
+        center.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        center.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        center.viewportBoundsProperty().addListener((ov, oldSize, newSize) -> {
+            double width = newSize.getWidth();
+            comicStrip.setFitWidth(width);
+            summary.setWrappingWidth(width - INSETS.getLeft() - INSETS.getRight());
         });
 
         final Provider p = new Provider();
@@ -83,45 +96,31 @@ public class TFWC extends Application {
                 return p.getSortedListOfComics();
             }
 
+            // @FIXME; failed() missing
             @Override
             protected void succeeded() {
                 try {
                     List<Comic> comics = get();
                     boolean first = true;
                     for (Comic current : comics) {
-                        current.image = new Image(current.url, true);
+                        current.image = new Image(current.url, !first);
                         comicChooser.getItems().add(current);
                         if (first) {
                             first = false;
                             comicChooser.getSelectionModel().select(current);
                         }
                     }
-                    comicChooser.setVisible(true);
+                    BorderPane root = new BorderPane(center, top, null, null, null);
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.sizeToScene();
+                    stage.show();
                 } catch (InterruptedException | ExecutionException ex) {
                     LOGGER.log(Level.SEVERE, "succeeded()", ex);
                 }
             }
         };
         new Thread(task).start();
-
-        FlowPane top = new FlowPane(comicChooser);
-        top.setPadding(INSETS);
-
-        VBox summaryParent = new VBox(summary);
-        summaryParent.setPadding(INSETS);
-        VBox centerContents = new VBox(comicStrip, summaryParent);
-        ScrollPane center = new ScrollPane(centerContents);
-        center.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        center.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        center.viewportBoundsProperty().addListener((ov, oldSize, newSize) -> {
-            double width = newSize.getWidth();
-            comicStrip.setFitWidth(width);
-            summary.setWrappingWidth(width - INSETS.getLeft() - INSETS.getRight());
-        });
-
-        BorderPane root = new BorderPane(center, top, null, null, null);
-        root.setPrefSize(800, 600);
-        return root;
     }
 
     private String getString(String key) {
