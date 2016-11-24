@@ -49,6 +49,14 @@ public class Provider {
     private static final String ATOM_URL = "http://www.xkcd.com/atom.xml";
     private static final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
+    /**
+     * Gets the list of recent comics sorted by date in reverse order (newest
+     * comes first). The returned list is never null, but may have zero elements
+     * if there was an error while retrieving the feed and its related
+     * resources.
+     *
+     * @return list of recent comics
+     */
     public List<Comic> getSortedListOfComics() {
         List<Comic> result = new ArrayList<>();
         try {
@@ -82,21 +90,21 @@ public class Provider {
                     }
                 }
             }
+            Collections.sort(result, Collections.reverseOrder((Comic o1, Comic o2) -> {
+                Date d1 = o1.updated;
+                Date d2 = o2.updated;
+                if (d1.before(d2)) {
+                    return -1;
+                } else if (d1.after(d2)) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }));
         } catch (IllegalArgumentException | IOException | SAXException |
-                ParserConfigurationException e) {
-            LOGGER.log(Level.SEVERE, "failed to load atom data", e);
+                ParserConfigurationException ex) {
+            LOGGER.log(Level.SEVERE, "failed to load atom data", ex);
         }
-        Collections.sort(result, Collections.reverseOrder((Comic o1, Comic o2) -> {
-            Date d1 = o1.updated;
-            Date d2 = o2.updated;
-            if (d1.before(d2)) {
-                return -1;
-            } else if (d1.after(d2)) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }));
         return result;
     }
 
