@@ -17,6 +17,7 @@
  */
 package com.thomaskuenneth.tfwc;
 
+import com.gluonhq.charm.down.Platform;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -25,6 +26,7 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
@@ -35,6 +37,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -119,7 +122,15 @@ public class TFWC extends Application {
                     }
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
-                    stage.sizeToScene();
+                    if (Platform.isDesktop()) {
+                        stage.sizeToScene();
+                    } else {
+                        Rectangle2D b = Screen.getPrimary().getVisualBounds();
+                        stage.setX(b.getMinX());
+                        stage.setY(b.getMinY());
+                        stage.setWidth(b.getWidth());
+                        stage.setHeight(b.getHeight());
+                    }
                     stage.show();
                 } catch (InterruptedException | ExecutionException ex) {
                     LOGGER.log(Level.SEVERE, "succeeded()", ex);
