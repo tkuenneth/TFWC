@@ -96,21 +96,27 @@ public class TFWC extends Application {
                 return p.getSortedListOfComics();
             }
 
-            // @FIXME; failed() missing
             @Override
             protected void succeeded() {
                 try {
                     List<Comic> comics = get();
-                    boolean first = true;
-                    for (Comic current : comics) {
-                        current.image = new Image(current.url, !first);
-                        comicChooser.getItems().add(current);
-                        if (first) {
-                            first = false;
-                            comicChooser.getSelectionModel().select(current);
+                    BorderPane root;
+                    if (comics.size() > 0) {
+                        boolean first = true;
+                        for (Comic current : comics) {
+                            current.image = new Image(current.url, !first);
+                            comicChooser.getItems().add(current);
+                            if (first) {
+                                first = false;
+                                comicChooser.getSelectionModel().select(current);
+                            }
                         }
+                        root = new BorderPane(center, top, null, null, null);
+                    } else {
+                        Text info = new Text(getString("error"));
+                        root = new BorderPane(info);
+                        root.setPadding(INSETS);
                     }
-                    BorderPane root = new BorderPane(center, top, null, null, null);
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
                     stage.sizeToScene();
