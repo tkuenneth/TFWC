@@ -47,7 +47,7 @@ public class Provider {
 
     private static final Logger LOGGER = Logger.getLogger(Provider.class.getName());
     private static final String ATOM_URL = "http://www.xkcd.com/atom.xml";
-    private static final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+    private static final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     /**
      * Gets the list of recent comics sorted by date in reverse order (newest
