@@ -12,7 +12,7 @@ by the Free Software Foundation.
 
 The app is based on Gluon Mobile. However, it deliberately does not use Gluon Glisten but a humble
 JavaFX interface for the sake of exercise ;-). Also, the app does not use the JSON interface of
-xkcd but relys on the atom feed, because this way a little more meta data is available.
+xkcd but relies on the atom feed, because this way a little more meta data is available.
 
 ## To do
 
