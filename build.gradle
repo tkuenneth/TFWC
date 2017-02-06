@@ -29,6 +29,8 @@ jfxmobile {
     }
     android {
         manifest = 'src/android/AndroidManifest.xml'
+        androidSdk = '/Users/thomas/Library/Android/sdk'
+        compileSdkVersion = 25
     }
     ios {
         infoPList = file('src/ios/Default-Info.plist')
