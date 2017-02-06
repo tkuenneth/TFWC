@@ -1,6 +1,6 @@
 /*
  * Provider.java - This file is part of TFWC
- * Copyright (C) 2016  Thomas Kuenneth
+ * Copyright (C) 2016 - 2017  Thomas Kuenneth
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 public class Provider {
 
     private static final Logger LOGGER = Logger.getLogger(Provider.class.getName());
-    private static final String ATOM_URL = "http://www.xkcd.com/atom.xml";
+    private static final String ATOM_URL = "https://www.xkcd.com/atom.xml";
     private static final DateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     /**
