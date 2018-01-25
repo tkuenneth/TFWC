@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.javafxports:jfxmobile-plugin:1.1.1'
+        classpath 'org.javafxports:jfxmobile-plugin:1.3.8'
     }
 }
 
@@ -19,17 +19,16 @@ repositories {
 mainClassName = 'com.thomaskuenneth.tfwc.TFWC'
 
 dependencies {
-    compile 'com.gluonhq:charm:4.2.0'
+    compile 'com.gluonhq:charm:4.3.7'
 }
 
 jfxmobile {
     downConfig {
-        version = '3.2.0'
+        version = '3.6.0'
         plugins 'display', 'lifecycle', 'statusbar', 'storage'
     }
     android {
         manifest = 'src/android/AndroidManifest.xml'
-        androidSdk = '/Users/thomas/Library/Android/sdk'
         compileSdkVersion = 25
     }
     ios {
