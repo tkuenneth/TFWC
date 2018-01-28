@@ -10,6 +10,8 @@ by the Free Software Foundation.
 
 ## gluon
 
-The app in the subdirectory *gluon* is based on Gluon Mobile. However, it deliberately does not use Gluon Glisten but a humble
-JavaFX interface for the sake of exercise ;-). Also, the app does not use the JSON interface of
-xkcd but relies on the atom feed, because this way a little more meta data is available.
+The app in the subdirectory *gluon* is based on Gluon Mobile. Please refer to http://gluonhq.com/products/mobile/ for more details. It deliberately does not use Gluon Glisten but a humble JavaFX interface for the sake of exercise ;-). 
+
+## flutter
+
+Flutter apps are written using the Dart programming language. Please refer to https://flutter.io for more information about Flutter.
