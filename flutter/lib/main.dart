@@ -14,7 +14,7 @@ Future<List<Comic>> _getSortedListOfComics() async {
   var document = xml.parse(response);
   var entries = document.findAllElements("entry");
   for (xml.XmlElement entry in entries) {
-    Comic comic = new Comic();
+    final comic = new Comic();
     List<xml.XmlElement> tags = entry.children;
     tags.forEach((xml.XmlElement tag) {
       switch (tag.name.local) {
@@ -99,10 +99,10 @@ class TFWCHomePageState extends State<TFWCHomePage> {
               selectedComic = s;
             });
           });
-      Text summary = new Text(selectedComic.summary);
-      Image i = new Image.network(selectedComic.src);
+      final summary = new Text(selectedComic.summary);
+      final image = new Image.network(selectedComic.src);
       child = new ListView(
-        children: <Widget>[dropdownButton, i, summary],
+        children: <Widget>[dropdownButton, image, summary],
       );
 //      child = new Column(
 //        children: <Widget>[dropdownButton, summary],
