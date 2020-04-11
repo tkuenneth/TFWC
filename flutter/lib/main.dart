@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:xml/xml.dart' as xml;
 import 'dart:async';
 
@@ -9,20 +9,20 @@ const String ATOM_URL = "https://www.xkcd.com/atom.xml";
 
 Future<List<Comic>> _getSortedListOfComics() async {
   var result = <Comic>[];
-  var httpClient = createHttpClient();
+  var httpClient = new Client();
   var response = await httpClient.read(ATOM_URL);
   var document = xml.parse(response);
   var entries = document.findAllElements("entry");
   for (xml.XmlElement entry in entries) {
     final comic = new Comic();
-    List<xml.XmlElement> tags = entry.children;
-    tags.forEach((xml.XmlElement tag) {
-      switch (tag.name.local) {
+    var tags = entry.children;
+    tags.forEach((var element) {
+      switch ((element as xml.XmlElement).name.local) {
         case "title":
-          comic.title = tag.text;
+          comic.title = element.text;
           break;
         case "summary":
-          _parseSummary(tag.firstChild, comic);
+          _parseSummary(element.firstChild, comic);
           break;
       }
     });
