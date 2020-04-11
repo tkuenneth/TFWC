@@ -55,7 +55,7 @@ class TFWCApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      home: new TFWCHomePage(title: 'TFWC'),
+      home: new TFWCHomePage(title: 'That Famous Web Comic'),
     );
   }
 }
@@ -91,7 +91,7 @@ class TFWCHomePageState extends State<TFWCHomePage> {
         });
       });
     } else {
-      DropdownButton dropdownButton = new DropdownButton(
+      final DropdownButton dropdownButton = new DropdownButton(
           items: items,
           value: selectedComic,
           onChanged: (s) {
@@ -99,20 +99,24 @@ class TFWCHomePageState extends State<TFWCHomePage> {
               selectedComic = s;
             });
           });
-      final summary = new Text(selectedComic.summary);
+      final summary = new Text(
+        selectedComic.summary,
+        style: new TextStyle(fontSize: 18),
+      );
+      final summaryWithPadding = new Padding(
+          padding: new EdgeInsets.only(top: 16), child: summary);
       final image = new Image.network(selectedComic.src);
       child = new ListView(
-        children: <Widget>[dropdownButton, image, summary],
+        children: <Widget>[dropdownButton, image, summaryWithPadding],
       );
-//      child = new Column(
-//        children: <Widget>[dropdownButton, summary],
-//      );
     }
+    final childWithPadding =
+        new Padding(padding: new EdgeInsets.fromLTRB(8, 0, 8, 8), child: child);
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: new Center(child: child),
+      body: new Center(child: childWithPadding),
     );
   }
 }
