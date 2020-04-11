@@ -74,9 +74,9 @@ class TFWCHomePageState extends State<TFWCHomePage> {
   List<DropdownMenuItem<Comic>> items;
 
   Widget build(BuildContext context) {
-    var child;
+    var body;
     if (items == null) {
-      child = new Text("loading");
+      body = new Center(child: new Text("Loading..."));
       _getSortedListOfComics().then((comics) {
         setState(() {
           items = new List<DropdownMenuItem<Comic>>();
@@ -99,24 +99,32 @@ class TFWCHomePageState extends State<TFWCHomePage> {
               selectedComic = s;
             });
           });
-      final summary = new Text(
-        selectedComic.summary,
-        style: new TextStyle(fontSize: 18),
+      final summary = new Padding(
+          padding: new EdgeInsets.only(top: 16),
+          child: new Text(
+            selectedComic.summary,
+            style: new TextStyle(fontSize: 18),
+          ));
+      final image = new SingleChildScrollView(
+        child: new Image.network(selectedComic.src),
+        scrollDirection: Axis.horizontal,
       );
-      final summaryWithPadding = new Padding(
-          padding: new EdgeInsets.only(top: 16), child: summary);
-      final image = new Image.network(selectedComic.src);
-      child = new ListView(
-        children: <Widget>[dropdownButton, image, summaryWithPadding],
-      );
+      body = new Padding(
+          padding: new EdgeInsets.fromLTRB(8, 0, 8, 8),
+          child: new ListView(
+            children: [
+              new Flex(
+                direction: Axis.vertical,
+                children: <Widget>[dropdownButton, image, summary],
+              )
+            ],
+          ));
     }
-    final childWithPadding =
-        new Padding(padding: new EdgeInsets.fromLTRB(8, 0, 8, 8), child: child);
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: new Center(child: childWithPadding),
+      body: body,
     );
   }
 }
