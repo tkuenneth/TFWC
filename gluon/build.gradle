@@ -1,13 +1,15 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'org.javafxports:jfxmobile-plugin:1.3.10'
-    }
-}
+apply plugin: 'java'
+apply plugin: 'application'
 
-apply plugin: 'org.javafxports.jfxmobile'
+def currentOS = org.gradle.internal.os.OperatingSystem.current()
+def platform
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isLinux()) {
+    platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+}
 
 repositories {
     jcenter()
@@ -19,26 +21,38 @@ repositories {
 mainClassName = 'com.thomaskuenneth.tfwc.TFWC'
 
 dependencies {
+
+    compile "org.openjfx:javafx-base:11:${platform}"
+    compile "org.openjfx:javafx-graphics:11:${platform}"
+    compile "org.openjfx:javafx-controls:11:${platform}"
+    compile "org.openjfx:javafx-fxml:11:${platform}"
+    
     compile 'com.gluonhq:charm:4.4.1'
+    compile 'com.gluonhq:particle:1.1.3'
+
+    compile 'org.controlsfx:controlsfx:9.0.0'
+    
+    compile 'javax.annotation:javax.annotation-api:1.3.1'
 }
 
-jfxmobile {
-    downConfig {
-        version = '3.6.0'
-        plugins 'display', 'lifecycle', 'statusbar', 'storage'
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls,javafx.fxml'
+        ]
     }
-    android {
-        manifest = 'src/android/AndroidManifest.xml'
-        compileSdkVersion = 25
-    }
-    ios {
-        infoPList = file('src/ios/Default-Info.plist')
-        forceLinkClasses = [
-                'com.gluonhq.**.*',
-                'javax.annotations.**.*',
-                'javax.inject.**.*',
-                'javax.json.**.*',
-                'org.glassfish.json.**.*'
+}
+
+run {
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls,javafx.fxml',
+                '--add-exports', 'javafx.base/com.sun.javafx.runtime=ALL-UNNAMED',
+                '--add-exports', 'javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED',
+                '--add-exports', 'javafx.graphics/com.sun.javafx.scene.traversal=ALL-UNNAMED',
+
         ]
     }
 }
